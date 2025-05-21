@@ -73,3 +73,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+/3D_basicDungeon/Library
+/3D_basicDungeon/UserSettings
+/3D_basicDungeon/Temp
