@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EquipTool : Equip
@@ -29,7 +27,7 @@ public class EquipTool : Equip
     {
         if (!attacking)
         {
-            if (CharacterManager.Instance.Player.condition.PowerDecay(usePower))
+            if (CharacterManager.Instance.Player.condition.UsePower(usePower))
             {
                 attacking = true;
                 animator.SetTrigger("Attack");

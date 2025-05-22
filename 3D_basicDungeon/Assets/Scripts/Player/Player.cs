@@ -7,12 +7,12 @@ public class Player : MonoBehaviour
 {
     public PlayerController controller;
     public PlayerCondition condition;
+    public Equipment equip;
 
-    public ItemData itemdata; // 획득한 아이템 정보
+    public ItemData itemData;
     public Action addItem;
 
-    public Equipment equip; // 장착된 아이템 정보
-    public Transform dropPosition; // 아이템 버릴 위치
+    public Transform dropPosition;
 
     private void Awake()
     {

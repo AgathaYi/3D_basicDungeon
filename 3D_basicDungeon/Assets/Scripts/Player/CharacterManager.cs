@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
@@ -10,8 +8,9 @@ public class CharacterManager : MonoBehaviour
         get
         {
             if (_instance == null)
+            {
                 _instance = new GameObject("CharacterManager").AddComponent<CharacterManager>();
-
+            }
             return _instance;
         }
     }
@@ -30,8 +29,9 @@ public class CharacterManager : MonoBehaviour
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
         else if (_instance == this)
+        {
             Destroy(gameObject);
+        }
     }
 }

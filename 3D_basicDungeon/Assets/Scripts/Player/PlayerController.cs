@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +7,6 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed;
     public float jumpPower;
-    public float fallGravity = 20f;
     private Vector2 curMovementInput;
     public LayerMask groundLayerMask;
 
@@ -21,9 +18,6 @@ public class PlayerController : MonoBehaviour
     public float lookSensitivity;
     private Vector2 mouseDelta;
 
-    [Header("Animations")]
-    public Animator animator;
-
     public bool canLook = true;
     public Action inventory;
 
@@ -32,7 +26,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        animator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -40,45 +33,26 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        curMovementInput = context.ReadValue<Vector2>();
-    }
-
     void FixedUpdate()
     {
         Move();
-        FallGravityVelocity();
-        animator.SetBool("IsGround", IsGrounded());
-    }
-
-    void Move()
-    {
-        Vector3 direction = transform.TransformDirection(new Vector3(curMovementInput.x, 0, curMovementInput.y));
-        _rigidbody.velocity = new Vector3(direction.x * moveSpeed, _rigidbody.velocity.y, direction.z * moveSpeed);
-
-        float speed = new Vector2(_rigidbody.velocity.x, _rigidbody.velocity.z).magnitude;
-        animator.SetFloat("Speed", speed);
     }
 
     private void LateUpdate()
     {
         if (canLook)
-            CameraLook();
-    }
-
-    public void OnLook(InputAction.CallbackContext context)
-    {
-        mouseDelta = context.ReadValue<Vector2>();
-    }
-
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        if (context.phase == InputActionPhase.Started && IsGrounded())
         {
-            animator.SetTrigger("Jump");
-            _rigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            CameraLook();
         }
+    }
+
+    void Move()
+    {
+        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
+        dir *= moveSpeed;
+        dir.y = _rigidbody.velocity.y;
+
+        _rigidbody.velocity = dir;
     }
 
     void CameraLook()
@@ -90,14 +64,34 @@ public class PlayerController : MonoBehaviour
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
 
-    private void FallGravityVelocity()
+    public void OnMove(InputAction.CallbackContext context)
     {
-        float velocityY = _rigidbody.velocity.y;
-
-        if (velocityY < 0f)
+        if (context.phase == InputActionPhase.Performed)
         {
-            Vector3 fall = Vector3.up * Physics.gravity.y * (fallGravity - 1);
-            _rigidbody.AddForce(fall, ForceMode.Acceleration);
+            curMovementInput = context.ReadValue<Vector2>();
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            curMovementInput = Vector2.zero;
+        }
+    }
+
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        mouseDelta = context.ReadValue<Vector2>();
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started && IsGrounded())
+        {
+            _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+        }
+        // 더블점프 구현, 트리플점프 불가
+        else if (context.phase == InputActionPhase.Started && !IsGrounded())
+        {
+            // 점프를 하지 않음
+            return;
         }
     }
 
@@ -114,14 +108,15 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < rays.Length; i++)
         {
             if (Physics.Raycast(rays[i], 0.1f, groundLayerMask))
+            {
                 return true;
+            }
         }
 
         return false;
     }
 
-    // InputSystem: 인벤토리 버튼 이벤트
-    public void OnInventory(InputAction.CallbackContext context)
+    public void OnInventoryButton(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)
         {

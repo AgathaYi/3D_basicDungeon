@@ -1,19 +1,16 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public interface IDamageable
 {
     void TakePhysicalDamage(int damage);
 }
-
 public class PlayerCondition : MonoBehaviour, IDamageable
 {
     public UICondition uiCondition;
 
+    Condition caffeine { get { return uiCondition.caffeine; } }
     Condition hunger { get { return uiCondition.hunger; } }
-    Condition caffeine { get { return uiCondition.health; } }
     Condition power { get { return uiCondition.power; } }
 
     public float noHungerHealthDecay;
@@ -22,20 +19,21 @@ public class PlayerCondition : MonoBehaviour, IDamageable
 
     void Update()
     {
-        if (caffeine == null) return; // 방어코드
+        hunger.Subtract(hunger.passiveValue * Time.deltaTime);
+        power.Add(power.passiveValue * Time.deltaTime);
+
+        if (hunger.curValue == 0f)
+        {
+            caffeine.Subtract(noHungerHealthDecay * Time.deltaTime);
+        }
+
         if (caffeine.curValue == 0f)
         {
             Die();
         }
     }
 
-    public void TakePhysicalDamage(int damage)
-    {
-        caffeine.Subtract(damage);
-        onTakeDamage?.Invoke();
-    }
-
-    public void Caffeine(float amount)
+    public void Heal(float amount)
     {
         caffeine.Add(amount);
     }
@@ -45,44 +43,25 @@ public class PlayerCondition : MonoBehaviour, IDamageable
         hunger.Add(amount);
     }
 
-    public void Drink(float amount)
+    public void Die()
     {
-        power.Add(amount);
+        Debug.Log("Player has died.");
     }
 
-    public bool CaffeineDecay(float amount)
+    public void TakePhysicalDamage(int damage)
     {
-        if (caffeine.curValue - amount < 0f)
-        {
-            return false;
-        }
-
-        caffeine.Subtract(amount);
-        return true;
+        caffeine.Subtract(damage);
+        onTakeDamage?.Invoke();
     }
 
-    public bool HungerDecay(float amount)
-    {
-        if (hunger.curValue - amount < 0f)
-        {
-            return false;
-        }
-        hunger.Subtract(amount);
-        return true;
-    }
-
-    public bool PowerDecay(float amount)
+    public bool UsePower(float amount)
     {
         if (power.curValue - amount < 0f)
         {
             return false;
         }
+
         power.Subtract(amount);
         return true;
-    }
-
-    public void Die()
-    {
-        Debug.Log("Player has died.");
     }
 }

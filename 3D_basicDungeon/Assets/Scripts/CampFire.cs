@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +15,7 @@ public class CampFire : MonoBehaviour
 
     void DealDamage()
     {
-        for (int i =0; i < things.Count; i++)
+        for (int i = 0; i < things.Count; i++)
         {
             things[i].TakePhysicalDamage(damage);
         }

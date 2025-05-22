@@ -1,46 +1,47 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemType
 {
-    Resource,
     Equipable,
     Consumable,
+    Resource,
+
 }
 
-public enum  ConsumableType
+public enum ConsumableType
 {
-    Hunger,
     Caffeine,
+    Hunger,
     Power,
 }
 
 [Serializable]
 public class ItemDataConsumable
 {
-    public ConsumableType Type;
+    public ConsumableType type;
     public float value;
 }
 
-[CreateAssetMenu(fileName = "ItemData", menuName = "New Item Data")]
+[CreateAssetMenu(fileName = "Item", menuName = "New Item")]
+
 public class ItemData : ScriptableObject
 {
     [Header("Info")]
-    public string displayName; // 아이템 이름
-    public string description; // 아이템 설명
-    public ItemType type; // 아이템 타입
-    public Sprite icon; // 아이템 아이콘
-    public GameObject dropPrefab; // 아이템 드랍 프리팹
+    public string displayName;
+    public string description;
+    public ItemType type;
+    public Sprite icon;
+    public GameObject dropPrefab;
 
     [Header("Stacking")]
-    public bool canStack; // 스택 가능 여부
-    public int maxStackAmount; // 최대 스택 수
-    
+    public bool canStack;
+    public int maxStackAmount;
+
+    [Header("Consumable")]
+    public ItemDataConsumable[] consumables;
+
     [Header("Equip")]
     public GameObject equipPrefab;
 
-    [Header("Consumable")]
-    public ItemDataConsumable[] consumables; // 소비 아이템 정보
 }

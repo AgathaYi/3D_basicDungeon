@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class ItemSlot : MonoBehaviour
 {
-    [Header("UI")]
+    public ItemData item;
+
+    public UIInventory inventory;
+    public Button button;
     public Image icon;
     public TextMeshProUGUI quantityText;
-    public Button button;
     private Outline outline;
 
-    [Header("스크립트에서 처리")]
-    public Inventory inventory;
-    public int slotIndex;
-    public ItemData item; // 슬롯에 들어갈 데이터
-    public int quantity; // 수량
-    public bool isEquipped; // 장착 여부
+    public int index;
+    public bool equipped;
+    public int quantity;
 
     private void Awake()
     {
@@ -26,28 +23,31 @@ public class ItemSlot : MonoBehaviour
 
     private void OnEnable()
     {
-        outline.enabled = isEquipped;
+        outline.enabled = equipped;
     }
 
-    public void SetData()
+    public void Set()
     {
-        icon.gameObject.SetActive(true); // 아이콘 활성화
+        icon.gameObject.SetActive(true);
         icon.sprite = item.icon;
-        quantityText.text = quantity > 1 ? quantity.ToString() : string.Empty; // 수량이 1보다 크면 표시
-        
+        quantityText.text = quantity > 1 ? quantity.ToString() : string.Empty;
+
         if (outline != null)
-            outline.enabled = isEquipped;
+        {
+            outline.enabled = equipped;
+        }
     }
 
     public void Clear()
     {
         item = null;
         icon.gameObject.SetActive(false);
-        quantityText.text = string.Empty; // 수량 텍스트 초기화
+        quantityText.text = string.Empty;
+
     }
 
     public void OnClickButton()
     {
-        inventory.SelectItem(slotIndex);
+        inventory.SelectItem(index);
     }
 }
