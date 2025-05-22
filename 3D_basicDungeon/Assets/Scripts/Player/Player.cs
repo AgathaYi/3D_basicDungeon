@@ -21,5 +21,4 @@ public class Player : MonoBehaviour
         condition = GetComponent<PlayerCondition>();
         equip = GetComponent<EquipController>();
     }
-
 }

@@ -37,13 +37,10 @@ public class ItemSlot : MonoBehaviour
     {
         quantity = Mathf.Max(0, quantity + delta); // 수량 업데이트
         if (quantity == 0)
-        {
             Clear();
-        }
+
         else
-        {
             quantityText.text = quantity.ToString();
-        }
     }
 
     public void Clear()

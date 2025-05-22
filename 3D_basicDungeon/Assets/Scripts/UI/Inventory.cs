@@ -21,7 +21,7 @@ public class Inventory : MonoBehaviour
     public TextMeshProUGUI itemDescriptionText;
     public TextMeshProUGUI statNameText;
     public TextMeshProUGUI statValueText;
-    
+
     private ItemSlot selectedItem; // 선택된 슬롯
     private int selectedItemIndex; // 선택된 슬롯 인덱스
     private int curEquipIndex; // 현재 장착된 슬롯 인덱스
@@ -32,16 +32,8 @@ public class Inventory : MonoBehaviour
     public Button unEquipButton;
     public Button dropButton;
 
-    private void Start()
+    private void Awake()
     {
-        controller = CharacterManager.Instance.Player.controller;
-        condition = CharacterManager.Instance.Player.condition;
-        dropPosition = CharacterManager.Instance.Player.dropPosition;
-
-        controller.inventory += ToggleInventoryUI;
-        CharacterManager.Instance.Player.addItem += AddItem;
-
-        inventoryUI.SetActive(false);
         slots = new ItemSlot[slotPanel.childCount];
 
         for (int i = 0; i < slots.Length; i++)
@@ -52,8 +44,28 @@ public class Inventory : MonoBehaviour
             slots[i].Clear();
         }
 
+        inventoryUI.SetActive(false);
         ClearSelectionItem();
+    }
 
+    private void OnEnable() // 스크립트 활성화 시 호출
+    {
+        controller = CharacterManager.Instance.Player.controller;
+        condition = CharacterManager.Instance.Player.condition;
+        dropPosition = CharacterManager.Instance.Player.dropPosition;
+
+        controller.inventory += ToggleInventoryUI;
+        CharacterManager.Instance.Player.addItem += AddItem;
+    }
+
+    private void OnDisable() // 스크립트 비활성화 시 호출
+    {
+        // 구독 해제
+        if (controller != null)
+            controller.inventory -= ToggleInventoryUI;
+
+        if (CharacterManager.Instance?.Player != null)
+            CharacterManager.Instance.Player.addItem -= AddItem;
     }
 
     private void ClearSelectionItem()
@@ -76,13 +88,10 @@ public class Inventory : MonoBehaviour
     private void ToggleInventoryUI()
     {
         if (IsOpen())
-        {
             inventoryUI.SetActive(false);
-        }
+
         else
-        {
             inventoryUI.SetActive(true);
-        }
     }
 
     public bool IsOpen()
@@ -122,16 +131,13 @@ public class Inventory : MonoBehaviour
 
     private void UpdateSlots()
     {
-        for(int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].data != null)
-            {
                 slots[i].SetData(slots[i].data, slots[i].quantity);
-            }
+
             else
-            {
                 slots[i].Clear();
-            }
         }
     }
 
@@ -141,9 +147,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].data == data && slots[i].quantity < data.maxStackAmount)
-            {
                 return slots[i];
-            }
         }
         return null;
     }
@@ -153,9 +157,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].data == null)
-            {
                 return slots[i];
-            }
         }
         return null;
     }
@@ -224,9 +226,7 @@ public class Inventory : MonoBehaviour
         if (selectedItem.quantity <= 0)
         {
             if (slots[selectedItemIndex].isEquipped)
-            {
                 UnEquip(selectedItemIndex);
-            }
 
             selectedItem.data = null;
             ClearSelectionItem();
@@ -238,9 +238,7 @@ public class Inventory : MonoBehaviour
     public void OnEquipButton()
     {
         if (slots[curEquipIndex].isEquipped)
-        {
             UnEquip(curEquipIndex);
-        }
 
         slots[selectedItemIndex].isEquipped = true;
         curEquipIndex = selectedItemIndex;
@@ -257,9 +255,7 @@ public class Inventory : MonoBehaviour
         UpdateSlots();
 
         if (selectedItemIndex == index)
-        {
             SelectItem(selectedItemIndex);
-        }
     }
 
     public void OnUnEquipButton()
