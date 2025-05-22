@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,14 +13,14 @@ public enum ItemType
 public enum  ConsumableType
 {
     Hunger,
-    Health,
+    Caffeine,
     Power,
 }
 
-[System.Serializable]
+[Serializable]
 public class ItemDataConsumable
 {
-    public ConsumableType consumType;
+    public ConsumableType Type;
     public float value;
 }
 
@@ -29,7 +30,7 @@ public class ItemData : ScriptableObject
     [Header("Info")]
     public string displayName; // 아이템 이름
     public string description; // 아이템 설명
-    public ItemType itemType; // 아이템 타입
+    public ItemType type; // 아이템 타입
     public Sprite icon; // 아이템 아이콘
     public GameObject dropPrefab; // 아이템 드랍 프리팹
 
