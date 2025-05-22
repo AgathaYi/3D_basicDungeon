@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8675109440636993447}
   m_Layer: 8
-  m_Name: Equip_Ax
+  m_Name: Equip_Axe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 8752118708987672146}
   - component: {fileID: 6814283587426337432}
   m_Layer: 8
-  m_Name: Ax_01
+  m_Name: Axe_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

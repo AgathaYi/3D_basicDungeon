@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 7624380409842370904}
   - component: {fileID: 2967680188161947066}
   - component: {fileID: 5686023684702162982}
+  - component: {fileID: 6823201297642727489}
   m_Layer: 8
   m_Name: Item_Cupcake
   m_TagString: Untagged
@@ -165,3 +166,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6823201297642727489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5599588522355165909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae5dcb1b960cbc47aca7ced0c353f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: eb2788ffae03e834a8961b35063a0b90, type: 2}

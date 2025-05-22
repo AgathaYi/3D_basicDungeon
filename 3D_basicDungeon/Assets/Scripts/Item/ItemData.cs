@@ -13,6 +13,7 @@ public enum  ConsumableType
 {
     Health,
     Hunger,
+    Power,
 }
 
 [System.Serializable]
@@ -22,7 +23,7 @@ public class ItemDataConsumable
     public float healValue;
 }
 
-[CreateAssetMenu(fileName = "NewItem", menuName = "Item/Data")]
+[CreateAssetMenu(fileName = "ItemData", menuName = "Item/ItemData")]
 public class ItemData : ScriptableObject
 {
     [Header("Info")]

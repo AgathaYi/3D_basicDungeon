@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1648974930562694412}
   - component: {fileID: 6733819437801275646}
   - component: {fileID: 8614742414119480245}
+  - component: {fileID: 7707771405533229801}
   m_Layer: 8
   m_Name: Item_Soda
   m_TagString: Untagged
@@ -82,6 +83,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7707771405533229801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3242729645918992142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae5dcb1b960cbc47aca7ced0c353f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: dc83cde713312224985524a6c9582522, type: 2}
 --- !u!1 &8505447101236856540
 GameObject:
   m_ObjectHideFlags: 0
