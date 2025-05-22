@@ -458,7 +458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpPower: 120
+  jumpPower: 200
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 191
@@ -528,8 +528,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4ad0fddaf2cef14d97ae37de2be9eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
-  condition: {fileID: 0}
+  controller: {fileID: 615813522}
+  condition: {fileID: 615813528}
 --- !u!114 &615813528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1335,9 +1335,9 @@ MonoBehaviour:
   moon: {fileID: 235908794}
   moonColor:
     serializedVersion: 2
-    key0: {r: 0.0068313135, g: 0, b: 0.764151, a: 1}
-    key1: {r: 0, g: 0, b: 0, a: 1}
-    key2: {r: 0.007843138, g: 0, b: 0.7647059, a: 0}
+    key0: {r: 0.22590517, g: 0.2216981, b: 1, a: 1}
+    key1: {r: 0, g: 0.016003132, b: 0.254717, a: 1}
+    key2: {r: 0.22745098, g: 0.22352941, b: 1, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
