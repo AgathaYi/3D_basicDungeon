@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2175118878458314918}
   - component: {fileID: 1702381657159686898}
   - component: {fileID: 1833283758263096933}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Item_Ax
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.16, y: 0.601, z: 0}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalScale: {x: 3.5, y: 3.5000002, z: 3.5000002}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6727052050978286196}
@@ -53,8 +53,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.2, y: 0.7, z: 0.16}
-  m_Center: {x: 0, y: 0.15, z: 0}
+  m_Size: {x: 0.20007326, y: 0.8255012, z: 0.096412115}
+  m_Center: {x: -0.026055742, y: 0.15302522, z: -0.0074037826}
 --- !u!54 &1833283758263096933
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 6727052050978286196}
   - component: {fileID: 3480267063864498616}
   - component: {fileID: 1634625743666421727}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Ax_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

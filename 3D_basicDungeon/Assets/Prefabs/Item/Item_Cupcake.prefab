@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 668300623530919566}
   - component: {fileID: 7467830840509793299}
   - component: {fileID: 8073040835480798372}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cupcake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 7624380409842370904}
   - component: {fileID: 2967680188161947066}
   - component: {fileID: 5686023684702162982}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Item_Cupcake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
