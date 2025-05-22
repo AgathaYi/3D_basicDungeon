@@ -9,9 +9,9 @@ public class Player : MonoBehaviour
     public PlayerCondition condition;
 
     public ItemData itemdata; // 획득한 아이템 정보
-    public System.Action addItem;
+    public Action addItem;
 
-    public EquipController equip; // 장착된 아이템 정보
+    public Equipment equip; // 장착된 아이템 정보
     public Transform dropPosition; // 아이템 버릴 위치
 
     private void Awake()
@@ -19,6 +19,6 @@ public class Player : MonoBehaviour
         CharacterManager.Instance.Player = this;
         controller = GetComponent<PlayerController>();
         condition = GetComponent<PlayerCondition>();
-        equip = GetComponent<EquipController>();
+        equip = GetComponent<Equipment>();
     }
 }

@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -22,18 +18,27 @@ public class Inventory : MonoBehaviour
     public TextMeshProUGUI statNameText;
     public TextMeshProUGUI statValueText;
 
-    private ItemSlot selectedItem; // 선택된 슬롯
-    private int selectedItemIndex; // 선택된 슬롯 인덱스
-    private int curEquipIndex; // 현재 장착된 슬롯 인덱스
+    private ItemSlot selectedItem;
+    private int selectedItemIndex;
+
+    int curEquipIndex; // 현재 장착된 슬롯 인덱스
 
     [Header("Buttons")]
-    public Button useButton;
-    public Button equipButton;
-    public Button unEquipButton;
-    public Button dropButton;
+    public GameObject useButton;
+    public GameObject equipButton;
+    public GameObject unEquipButton;
+    public GameObject dropButton;
 
-    private void Awake()
+    void Start()
     {
+        controller = CharacterManager.Instance.Player.controller;
+        condition = CharacterManager.Instance.Player.condition;
+        dropPosition = CharacterManager.Instance.Player.dropPosition;
+
+        controller.inventory += ToggleInventoryUI;
+        CharacterManager.Instance.Player.addItem += AddItem;
+
+        inventoryUI.SetActive(false);
         slots = new ItemSlot[slotPanel.childCount];
 
         for (int i = 0; i < slots.Length; i++)
@@ -44,31 +49,10 @@ public class Inventory : MonoBehaviour
             slots[i].Clear();
         }
 
-        inventoryUI.SetActive(false);
         ClearSelectionItem();
     }
 
-    private void OnEnable() // 스크립트 활성화 시 호출
-    {
-        controller = CharacterManager.Instance.Player.controller;
-        condition = CharacterManager.Instance.Player.condition;
-        dropPosition = CharacterManager.Instance.Player.dropPosition;
-
-        controller.inventory += ToggleInventoryUI;
-        CharacterManager.Instance.Player.addItem += AddItem;
-    }
-
-    private void OnDisable() // 스크립트 비활성화 시 호출
-    {
-        // 구독 해제
-        if (controller != null)
-            controller.inventory -= ToggleInventoryUI;
-
-        if (CharacterManager.Instance?.Player != null)
-            CharacterManager.Instance.Player.addItem -= AddItem;
-    }
-
-    private void ClearSelectionItem()
+    void ClearSelectionItem()
     {
         selectedItem = null;
 
@@ -79,13 +63,13 @@ public class Inventory : MonoBehaviour
         statValueText.text = string.Empty;
 
         // 버튼 비활성화
-        useButton.gameObject.SetActive(false);
-        equipButton.gameObject.SetActive(false);
-        unEquipButton.gameObject.SetActive(false);
-        dropButton.gameObject.SetActive(false);
+        useButton.SetActive(false);
+        equipButton.SetActive(false);
+        unEquipButton.SetActive(false);
+        dropButton.SetActive(false);
     }
 
-    private void ToggleInventoryUI()
+    public void ToggleInventoryUI()
     {
         if (IsOpen())
             inventoryUI.SetActive(false);
@@ -100,9 +84,11 @@ public class Inventory : MonoBehaviour
     }
 
     // 아이템 추가시 슬롯 업데이트
-    private void AddItem()
+    void AddItem()
     {
         ItemData data = CharacterManager.Instance.Player.itemdata;
+
+        // 아이템 중복 체크
         if (data.canStack)
         {
             ItemSlot slot = GetItemStack(data);
@@ -115,38 +101,41 @@ public class Inventory : MonoBehaviour
             }
         }
 
+        // 빈슬롯 가져오기
         ItemSlot emptySlot = GetEmptySlot();
+
+        // 빈슬롯이 있다면 슬롯에 아이템 추가
         if (emptySlot != null)
         {
-            emptySlot.data = data;
+            emptySlot.item = data;
             emptySlot.quantity = 1;
             UpdateSlots();
             CharacterManager.Instance.Player.itemdata = null;
             return;
         }
 
+        // 슬롯이 없다면 아이템 버리기
         ThrowItem(data);
         CharacterManager.Instance.Player.itemdata = null;
     }
 
-    private void UpdateSlots()
+    void UpdateSlots()
     {
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].data != null)
-                slots[i].SetData(slots[i].data, slots[i].quantity);
+            if (slots[i].item != null)
+                slots[i].SetData();
 
             else
                 slots[i].Clear();
         }
     }
 
-
     ItemSlot GetItemStack(ItemData data)
     {
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].data == data && slots[i].quantity < data.maxStackAmount)
+            if (slots[i].item == data && slots[i].quantity < data.maxStackAmount)
                 return slots[i];
         }
         return null;
@@ -156,55 +145,58 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].data == null)
+            if (slots[i].item == null)
                 return slots[i];
         }
         return null;
     }
 
-    public void ThrowItem(ItemData data)
+    void ThrowItem(ItemData data)
     {
         Instantiate(data.dropPrefab, dropPosition.position, Quaternion.Euler(Vector3.one * Random.value * 360));
     }
 
     public void SelectItem(int index)
     {
-        if (slots[index].data == null) return;
+        if (slots[index].item == null) return;
 
         selectedItem = slots[index];
         selectedItemIndex = index;
 
-        statNameText.text = selectedItem.data.displayName;
-        statValueText.text = selectedItem.data.description;
+        itemNameText.text = selectedItem.item.displayName;
+        itemDescriptionText.text = selectedItem.item.description;
 
         statNameText.text = string.Empty;
         statValueText.text = string.Empty;
 
-        for (int i = 0; i < selectedItem.data.consumables.Length; i++)
+        for (int i = 0; i < selectedItem.item.consumables.Length; i++)
         {
-            statNameText.text += selectedItem.data.consumables[i].consumType.ToString() + "\n";
-            statValueText.text += selectedItem.data.consumables[i].value.ToString() + "\n";
+            statNameText.text += selectedItem.item.consumables[i].Type.ToString() + "\n";
+            statValueText.text += selectedItem.item.consumables[i].value.ToString() + "\n";
         }
 
-        useButton.gameObject.SetActive(selectedItem.data.itemType == ItemType.Consumable);
-        equipButton.gameObject.SetActive(selectedItem.data.itemType == ItemType.Equipable && !selectedItem.isEquipped);
-        unEquipButton.gameObject.SetActive(selectedItem.data.itemType == ItemType.Equipable && selectedItem.isEquipped);
-        dropButton.gameObject.SetActive(true);
+        useButton.SetActive(selectedItem.item.type == ItemType.Consumable);
+        equipButton.SetActive(selectedItem.item.type == ItemType.Equipable && !slots[index].isEquipped);
+        unEquipButton.SetActive(selectedItem.item.type == ItemType.Equipable && slots[index].isEquipped);
+        dropButton.SetActive(true);
     }
 
     public void OnUseButton()
     {
-        if (selectedItem.data.itemType == ItemType.Consumable)
+        if (selectedItem.item.type == ItemType.Consumable)
         {
-            for (int i = 0; i < selectedItem.data.consumables.Length; i++)
+            for (int i = 0; i < selectedItem.item.consumables.Length; i++)
             {
-                switch (selectedItem.data.consumables[i].consumType)
+                switch (selectedItem.item.consumables[i].Type)
                 {
-                    case ConsumableType.Health:
-                        condition.Heal(selectedItem.data.consumables[i].value);
-                        break;
                     case ConsumableType.Hunger:
-                        condition.Eat(selectedItem.data.consumables[i].value);
+                        condition.Eat(selectedItem.item.consumables[i].value);
+                        break;
+                    case ConsumableType.Caffeine:
+                        condition.Caffeine(selectedItem.item.consumables[i].value);
+                        break;
+                    case ConsumableType.Power:
+                        condition.Drink(selectedItem.item.consumables[i].value);
                         break;
                 }
             }
@@ -215,7 +207,7 @@ public class Inventory : MonoBehaviour
 
     public void OnDropButton()
     {
-        ThrowItem(selectedItem.data);
+        ThrowItem(selectedItem.item);
         RemoveSelectedItem();
     }
 
@@ -225,10 +217,10 @@ public class Inventory : MonoBehaviour
 
         if (selectedItem.quantity <= 0)
         {
-            if (slots[selectedItemIndex].isEquipped)
+            if (selectedItem.isEquipped)
                 UnEquip(selectedItemIndex);
 
-            selectedItem.data = null;
+            selectedItem = null;
             ClearSelectionItem();
         }
 
@@ -242,7 +234,7 @@ public class Inventory : MonoBehaviour
 
         slots[selectedItemIndex].isEquipped = true;
         curEquipIndex = selectedItemIndex;
-        CharacterManager.Instance.Player.equip.Equip(selectedItem.data.equipPrefab);
+        CharacterManager.Instance.Player.equip.Equip(selectedItem.item);
         UpdateSlots();
 
         SelectItem(selectedItemIndex);

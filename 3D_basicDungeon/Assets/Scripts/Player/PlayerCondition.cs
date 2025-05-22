@@ -13,7 +13,7 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     public UICondition uiCondition;
 
     Condition hunger { get { return uiCondition.hunger; } }
-    Condition health { get { return uiCondition.health; } }
+    Condition caffeine { get { return uiCondition.health; } }
     Condition power { get { return uiCondition.power; } }
 
     public float noHungerHealthDecay;
@@ -22,26 +22,22 @@ public class PlayerCondition : MonoBehaviour, IDamageable
 
     void Update()
     {
-        if (health == null) return; // 规绢内靛
-        if (health.curValue == 0f)
+        if (caffeine == null) return; // 规绢内靛
+        if (caffeine.curValue == 0f)
         {
             Die();
         }
     }
 
-    public void Heal(float amount)
-    {
-        health.Add(amount);
-    }
-    public void Die()
-    {
-        Debug.Log("Player has died.");
-    }
-
     public void TakePhysicalDamage(int damage)
     {
-        health.Subtract(damage);
+        caffeine.Subtract(damage);
         onTakeDamage?.Invoke();
+    }
+
+    public void Caffeine(float amount)
+    {
+        caffeine.Add(amount);
     }
 
     public void Eat(float amount)
@@ -52,5 +48,41 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     public void Drink(float amount)
     {
         power.Add(amount);
+    }
+
+    public bool CaffeineDecay(float amount)
+    {
+        if (caffeine.curValue - amount < 0f)
+        {
+            return false;
+        }
+
+        caffeine.Subtract(amount);
+        return true;
+    }
+
+    public bool HungerDecay(float amount)
+    {
+        if (hunger.curValue - amount < 0f)
+        {
+            return false;
+        }
+        hunger.Subtract(amount);
+        return true;
+    }
+
+    public bool PowerDecay(float amount)
+    {
+        if (power.curValue - amount < 0f)
+        {
+            return false;
+        }
+        power.Subtract(amount);
+        return true;
+    }
+
+    public void Die()
+    {
+        Debug.Log("Player has died.");
     }
 }

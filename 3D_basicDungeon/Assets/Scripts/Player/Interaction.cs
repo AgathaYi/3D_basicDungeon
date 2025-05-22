@@ -19,7 +19,6 @@ public class Interaction : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main;
-        promptText.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -29,7 +28,7 @@ public class Interaction : MonoBehaviour
 
     private void ScanCenterPoint()
     {
-        if (Time.time - lastCheckTime < checkRate) return;
+        if (Time.time - lastCheckTime <= checkRate) return;
         lastCheckTime = Time.time;
 
         // È­¸é Áß¾ÓÁ¡ºÎÅÍ Ray½î±â

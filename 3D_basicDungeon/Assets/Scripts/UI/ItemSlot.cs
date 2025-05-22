@@ -10,50 +10,44 @@ public class ItemSlot : MonoBehaviour
     public Image icon;
     public TextMeshProUGUI quantityText;
     public Button button;
+    private Outline outline;
 
-    [Header("Inspector 드래그 X")]
+    [Header("스크립트에서 처리")]
     public Inventory inventory;
     public int slotIndex;
-    public ItemData data; // 슬롯에 들어갈 데이터
+    public ItemData item; // 슬롯에 들어갈 데이터
     public int quantity; // 수량
     public bool isEquipped; // 장착 여부
 
     private void Awake()
     {
-        button.onClick.AddListener(OnClick);
-        Clear();
+        outline = GetComponent<Outline>();
     }
 
-    public void SetData(ItemData itemData, int amount)
+    private void OnEnable()
     {
-        data = itemData;
-        quantity = amount;
-        icon.sprite = data.icon;
+        outline.enabled = isEquipped;
+    }
+
+    public void SetData()
+    {
         icon.gameObject.SetActive(true); // 아이콘 활성화
+        icon.sprite = item.icon;
         quantityText.text = quantity > 1 ? quantity.ToString() : string.Empty; // 수량이 1보다 크면 표시
-    }
-
-    public void AddQuantity(int delta)
-    {
-        quantity = Mathf.Max(0, quantity + delta); // 수량 업데이트
-        if (quantity == 0)
-            Clear();
-
-        else
-            quantityText.text = quantity.ToString();
+        
+        if (outline != null)
+            outline.enabled = isEquipped;
     }
 
     public void Clear()
     {
-        data = null;
-        quantity = 0;
-        isEquipped = false;
+        item = null;
         icon.gameObject.SetActive(false);
         quantityText.text = string.Empty; // 수량 텍스트 초기화
     }
 
-    private void OnClick()
+    public void OnClickButton()
     {
-        inventory.SelectItem(slotIndex); // 슬롯 선택
+        inventory.SelectItem(slotIndex);
     }
 }

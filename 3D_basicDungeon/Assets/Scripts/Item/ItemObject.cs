@@ -17,7 +17,8 @@ public class ItemObject : MonoBehaviour, IInteractable
     // UI 상에 출력할 상호작용 프롬프트를 반환
     public string GetInteractPrompt()
     {
-        return $"{data.displayName}\n{data.description}";
+        string str = $"{data.displayName}\n{data.description}";
+        return str;
     }
 
     // 상호
