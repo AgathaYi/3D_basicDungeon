@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // InputSystem: 인벤토리 버튼 이벤트
     public void OnInventoryButton(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)

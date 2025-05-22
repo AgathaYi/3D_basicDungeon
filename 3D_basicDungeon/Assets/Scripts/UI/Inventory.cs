@@ -2,20 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+    private PlayerController controller;
+    private PlayerCondition condition;
+
     [Header("Slots")]
     public GameObject inventoryUI; // 인벤토리 전체창
     public Transform slotPanel; //슬롯배치 부모
-    public GameObject slotPrefab; // 슬롯 1개
+    public Transform dropPosition; // 버릴 위치
+    public ItemSlot[] slots;
 
-    [Header("ItemInfo")]
+    [Header("Selected Item Info")]
     public TextMeshProUGUI itemNameText;
     public TextMeshProUGUI itemDescriptionText;
     public TextMeshProUGUI statNameText;
     public TextMeshProUGUI statValueText;
+    
+    private ItemSlot selectedItem; // 선택된 슬롯
+    private int selectedItemIndex; // 선택된 슬롯 인덱스
+    private int curEquipIndex; // 현재 장착된 슬롯 인덱스
 
     [Header("Buttons")]
     public Button useButton;
@@ -23,133 +32,244 @@ public class Inventory : MonoBehaviour
     public Button unEquipButton;
     public Button dropButton;
 
-    private List<ItemSlot> slots = new List<ItemSlot>();
-    private ItemSlot selectedSlot; // 선택된 슬롯
-    private Player player => CharacterManager.Instance.Player;
-
-    private void Awake()
-    {
-        // 슬롯 생성
-        foreach (Transform child in slotPanel) Destroy(child.gameObject);
-        for (int i = 0; i < 12; i++)
-        {
-            var slotObj = Instantiate(slotPrefab, slotPanel);
-            var slot = slotObj.GetComponent<ItemSlot>();
-            slot.slotIndex = i;
-            slot.inventory = this;
-            slots.Add(slot);
-        }
-
-        // 버튼 이벤트
-        useButton.onClick.AddListener(OnUse);
-        equipButton.onClick.AddListener(OnEquip);
-        unEquipButton.onClick.AddListener(OnUnEquip);
-        dropButton.onClick.AddListener(OnDrop);
-
-        // 인벤토리 UI 비활성화
-        inventoryUI.SetActive(false);
-        ClearInfo();
-    }
-
     private void Start()
     {
-        player.controller.inventory += ToggleInventoryUI; // 인벤토리 열기
-        player.addItem += UpdateSlots; // 아이템 추가
+        controller = CharacterManager.Instance.Player.controller;
+        condition = CharacterManager.Instance.Player.condition;
+        dropPosition = CharacterManager.Instance.Player.dropPosition;
+
+        controller.inventory += ToggleInventoryUI;
+        CharacterManager.Instance.Player.addItem += AddItem;
+
+        inventoryUI.SetActive(false);
+        slots = new ItemSlot[slotPanel.childCount];
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i] = slotPanel.GetChild(i).GetComponent<ItemSlot>();
+            slots[i].slotIndex = i;
+            slots[i].inventory = this;
+            slots[i].Clear();
+        }
+
+        ClearSelectionItem();
+
+    }
+
+    private void ClearSelectionItem()
+    {
+        selectedItem = null;
+
+        // 빈 슬롯 선택 시, 아이템 정보 빈칸으로
+        itemNameText.text = string.Empty;
+        itemDescriptionText.text = string.Empty;
+        statNameText.text = string.Empty;
+        statValueText.text = string.Empty;
+
+        // 버튼 비활성화
+        useButton.gameObject.SetActive(false);
+        equipButton.gameObject.SetActive(false);
+        unEquipButton.gameObject.SetActive(false);
+        dropButton.gameObject.SetActive(false);
     }
 
     private void ToggleInventoryUI()
     {
-        bool open = !inventoryUI.activeSelf;
-        inventoryUI.SetActive(open);
-
-        // 열리면, look 잠금 및 커서 활성화
-        player.controller.canLook = !open;
-        Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
+        if (IsOpen())
+        {
+            inventoryUI.SetActive(false);
+        }
+        else
+        {
+            inventoryUI.SetActive(true);
+        }
     }
 
-    private void UpdateSlots()
+    public bool IsOpen()
     {
-        // 저장된 아이템 빈 슬롯에 추가
-        var data = player.itemdata;
-        if (data == null) return;
+        return inventoryUI.activeInHierarchy;
+    }
 
-        // 추가 가능 여부 확인(stack 갯수 확인)
+    // 아이템 추가시 슬롯 업데이트
+    private void AddItem()
+    {
+        ItemData data = CharacterManager.Instance.Player.itemdata;
         if (data.canStack)
         {
-            var exist = slots.Find(s => s.data == data && s.quantity < data.maxStackAmount);
-            if (exist != null)
+            ItemSlot slot = GetItemStack(data);
+            if (slot != null)
             {
-                exist.AddQuantity(1); // 수량 증가
-                ClearSelection();
+                slot.quantity++;
+                UpdateSlots();
+                CharacterManager.Instance.Player.itemdata = null;
                 return;
             }
         }
 
-        // 빈 슬롯 찾기
-        var empty = slots.Find(s => s.data == null);
-        if (empty != null)
+        ItemSlot emptySlot = GetEmptySlot();
+        if (emptySlot != null)
         {
-            empty.SetData(data, 1); // 슬롯에 데이터 추가
-            ClearSelection();
+            emptySlot.data = data;
+            emptySlot.quantity = 1;
+            UpdateSlots();
+            CharacterManager.Instance.Player.itemdata = null;
             return;
         }
 
-        // 슬롯이 가득 찼을 때, 드랍
-        Instantiate(data.dropPrefab, player.dropPosition.position, Quaternion.identity);
-        player.itemdata = null; // 플레이어 itemData 초기화
-
+        ThrowItem(data);
+        CharacterManager.Instance.Player.itemdata = null;
     }
 
-    private void ClearSelection()
+    private void UpdateSlots()
     {
-        selectedSlot = null;
-        ClearInfo();
+        for(int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].data != null)
+            {
+                slots[i].SetData(slots[i].data, slots[i].quantity);
+            }
+            else
+            {
+                slots[i].Clear();
+            }
+        }
     }
 
-    private void ClearInfo()
+
+    ItemSlot GetItemStack(ItemData data)
     {
-        // 빈 슬롯 선택 시, 아이템 정보 빈칸으로
-        // 버튼 비활성화
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].data == data && slots[i].quantity < data.maxStackAmount)
+            {
+                return slots[i];
+            }
+        }
+        return null;
     }
 
-    private void OnUse()
+    ItemSlot GetEmptySlot()
     {
-        if (selectedSlot == null) return;
-        if (selectedSlot.data == null) return;
-        // 사용
-        player.itemdata = selectedSlot.data;
-        selectedSlot.AddQuantity(-1); // 슬롯 수량 감소
-        if (selectedSlot.quantity <= 0) selectedSlot.Clear(); // 슬롯 비우기
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].data == null)
+            {
+                return slots[i];
+            }
+        }
+        return null;
     }
 
-    private void OnEquip()
+    public void ThrowItem(ItemData data)
     {
-        if (selectedSlot == null) return;
-        if (selectedSlot.data == null) return;
-        // 장착
-        player.itemdata = selectedSlot.data;
-        selectedSlot.isEquipped = true; // 슬롯 장착 상태 변경
-        selectedSlot.AddQuantity(-1); // 슬롯 수량 감소
-        if (selectedSlot.quantity <= 0) selectedSlot.Clear(); // 슬롯 비우기
+        Instantiate(data.dropPrefab, dropPosition.position, Quaternion.Euler(Vector3.one * Random.value * 360));
     }
 
-    private void OnUnEquip()
+    public void SelectItem(int index)
     {
-        if (selectedSlot == null) return;
-        if (selectedSlot.data == null) return;
-        // 장착 해제
-        player.itemdata = selectedSlot.data;
-        selectedSlot.isEquipped = false; // 슬롯 장착 해제 상태 변경
-        selectedSlot.AddQuantity(1); // 슬롯 수량 증가
+        if (slots[index].data == null) return;
+
+        selectedItem = slots[index];
+        selectedItemIndex = index;
+
+        statNameText.text = selectedItem.data.displayName;
+        statValueText.text = selectedItem.data.description;
+
+        statNameText.text = string.Empty;
+        statValueText.text = string.Empty;
+
+        for (int i = 0; i < selectedItem.data.consumables.Length; i++)
+        {
+            statNameText.text += selectedItem.data.consumables[i].consumType.ToString() + "\n";
+            statValueText.text += selectedItem.data.consumables[i].value.ToString() + "\n";
+        }
+
+        useButton.gameObject.SetActive(selectedItem.data.itemType == ItemType.Consumable);
+        equipButton.gameObject.SetActive(selectedItem.data.itemType == ItemType.Equipable && !selectedItem.isEquipped);
+        unEquipButton.gameObject.SetActive(selectedItem.data.itemType == ItemType.Equipable && selectedItem.isEquipped);
+        dropButton.gameObject.SetActive(true);
     }
 
-    private void OnDrop()
+    public void OnUseButton()
     {
-        if (selectedSlot == null) return;
-        if (selectedSlot.data == null) return;
-        // 드랍
-        Instantiate(selectedSlot.data.dropPrefab, player.dropPosition.position, Quaternion.identity);
-        selectedSlot.AddQuantity(-1); // 슬롯 수량 감소
-        if (selectedSlot.quantity <= 0) selectedSlot.Clear(); // 슬롯 비우기
+        if (selectedItem.data.itemType == ItemType.Consumable)
+        {
+            for (int i = 0; i < selectedItem.data.consumables.Length; i++)
+            {
+                switch (selectedItem.data.consumables[i].consumType)
+                {
+                    case ConsumableType.Health:
+                        condition.Heal(selectedItem.data.consumables[i].value);
+                        break;
+                    case ConsumableType.Hunger:
+                        condition.Eat(selectedItem.data.consumables[i].value);
+                        break;
+                }
+            }
+
+            RemoveSelectedItem();
+        }
     }
+
+    public void OnDropButton()
+    {
+        ThrowItem(selectedItem.data);
+        RemoveSelectedItem();
+    }
+
+    void RemoveSelectedItem()
+    {
+        selectedItem.quantity--;
+
+        if (selectedItem.quantity <= 0)
+        {
+            if (slots[selectedItemIndex].isEquipped)
+            {
+                UnEquip(selectedItemIndex);
+            }
+
+            selectedItem.data = null;
+            ClearSelectionItem();
+        }
+
+        UpdateSlots();
+    }
+
+    public void OnEquipButton()
+    {
+        if (slots[curEquipIndex].isEquipped)
+        {
+            UnEquip(curEquipIndex);
+        }
+
+        slots[selectedItemIndex].isEquipped = true;
+        curEquipIndex = selectedItemIndex;
+        CharacterManager.Instance.Player.equip.Equip(selectedItem.data.equipPrefab);
+        UpdateSlots();
+
+        SelectItem(selectedItemIndex);
+    }
+
+    void UnEquip(int index)
+    {
+        slots[index].isEquipped = false;
+        CharacterManager.Instance.Player.equip.UnEquip();
+        UpdateSlots();
+
+        if (selectedItemIndex == index)
+        {
+            SelectItem(selectedItemIndex);
+        }
+    }
+
+    public void OnUnEquipButton()
+    {
+        UnEquip(selectedItemIndex);
+    }
+
+    public bool HasItem(ItemData item, int quantity)
+    {
+        return false;
+    }
+
 }

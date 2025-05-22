@@ -11,8 +11,8 @@ public enum ItemType
 
 public enum  ConsumableType
 {
-    Health,
     Hunger,
+    Health,
     Power,
 }
 
@@ -20,10 +20,10 @@ public enum  ConsumableType
 public class ItemDataConsumable
 {
     public ConsumableType consumType;
-    public float healValue;
+    public float value;
 }
 
-[CreateAssetMenu(fileName = "ItemData", menuName = "Item/ItemData")]
+[CreateAssetMenu(fileName = "ItemData", menuName = "New Item Data")]
 public class ItemData : ScriptableObject
 {
     [Header("Info")]
@@ -36,6 +36,9 @@ public class ItemData : ScriptableObject
     [Header("Stacking")]
     public bool canStack; // 스택 가능 여부
     public int maxStackAmount; // 최대 스택 수
+    
+    [Header("Equip")]
+    public GameObject equipPrefab;
 
     [Header("Consumable")]
     public ItemDataConsumable[] consumables; // 소비 아이템 정보

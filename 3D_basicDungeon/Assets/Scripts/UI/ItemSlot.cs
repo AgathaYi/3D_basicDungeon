@@ -57,6 +57,6 @@ public class ItemSlot : MonoBehaviour
 
     private void OnClick()
     {
-        //inventory.SelectSlot(slotIndex); // ΩΩ∑‘ º±≈√
+        inventory.SelectItem(slotIndex); // ΩΩ∑‘ º±≈√
     }
 }

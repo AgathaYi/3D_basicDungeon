@@ -22,4 +22,4 @@ MonoBehaviour:
   maxStackAmount: 15
   consumables:
   - consumType: 2
-    healValue: 20
+    value: 20
