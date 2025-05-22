@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed;
     public float jumpPower;
+    public float fallGravity = 20f;
     private Vector2 curMovementInput;
     public LayerMask groundLayerMask;
 
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Move();
-
+        FallGravityVelocity();
         animator.SetBool("IsGround", IsGrounded());
     }
 
@@ -91,7 +92,16 @@ public class PlayerController : MonoBehaviour
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
 
-    
+    private void FallGravityVelocity()
+    {
+        float velocityY = _rigidbody.velocity.y;
+
+        if (velocityY < 0f)
+        {
+            Vector3 fall = Vector3.up * Physics.gravity.y * (fallGravity - 1);
+            _rigidbody.AddForce(fall, ForceMode.Acceleration);
+        }
+    }
 
     bool IsGrounded()
     {
