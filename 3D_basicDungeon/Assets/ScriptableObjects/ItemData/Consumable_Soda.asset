@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe3d427265910504ea20982cd65a8096, type: 3}
-  m_Name: Recourse_Rock
+  m_Name: Consumable_Soda
   m_EditorClassIdentifier: 
-  displayName: "\uB3CC"
-  description: "\uBC29\uD574\uB418\uB2C8 \uCE58\uC6CC\uC57C\uACA0\uB2E4. \uB098\uC911\uC5D0
-    \uC4F8 \uB370\uAC00 \uC788\uC744\uAE4C?"
-  type: 2
-  icon: {fileID: 21300000, guid: cd7d756f44d77e5408f309e31b338802, type: 3}
-  dropPrefab: {fileID: 4412574713292222925, guid: 2d01eea0a628c674ba401e2582fc4577, type: 3}
+  displayName: "\uCF5C\uB77C"
+  description: "\uC2DC\uC6D0\uD558\uAC8C \uACF5\uACA9\uD560 \uD798\uC774 \uB0A0 \uAC83
+    \uAC19\uB2E4."
+  type: 1
+  icon: {fileID: 21300000, guid: b899b4a74633ec348bd6f66950357dd0, type: 3}
+  dropPrefab: {fileID: 3242729645918992142, guid: f04941c09fd84814c8d1d0dd47b58b64, type: 3}
   canStack: 1
   maxStackAmount: 15
-  consumables: []
+  consumables:
+  - type: 2
+    value: 20
   equipPrefab: {fileID: 0}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe3d427265910504ea20982cd65a8096, type: 3}
-  m_Name: Consum_Cupcake
+  m_Name: Consumable_Cupcake
   m_EditorClassIdentifier: 
   displayName: "\uCEF5\uCF00\uC774\uD06C"
   description: "\uBE44\uC0C1\uC2DD\uB7C9 \uBC1C\uACAC!!"
