@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     public Action inventory;
 
     private Rigidbody _rigidbody;
+    private JumpPad curJumpPad;
 
     private void Awake()
     {
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // 이동 방향, 속도
     void Move()
     {
         Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
@@ -67,6 +69,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("Speed", speed);
     }
 
+    // 마우스 커서 방향으로 회전 (mnouseDelta)
     void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
@@ -76,6 +79,7 @@ public class PlayerController : MonoBehaviour
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
 
+    // WASD 이동
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -88,25 +92,47 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // 마우스 이동
     public void OnLook(InputAction.CallbackContext context)
     {
         mouseDelta = context.ReadValue<Vector2>();
     }
 
+    // Spacebar 점프
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started && IsGrounded())
         {
             animator.SetTrigger("Jump");
-            _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+
+            // 점프패드가 있다면, JumpPad 클래스의 jumpForce를 사용, 아니면 기본 점프
+            float force = (curJumpPad != null) ? curJumpPad.jumpForce : jumpPower;
+
+            _rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
+
+            curJumpPad = null; // 점프패드 해제
         }
         else if (context.phase == InputActionPhase.Started && !IsGrounded())
         {
-            // 점프를 하지 않음
+            // 더블 점프를 하지 않음
             return;
         }
     }
 
+    // 점프패드에서 점프
+    public void EnterJumpPad(JumpPad jumpPad)
+    {
+        curJumpPad = jumpPad;
+    }
+
+    // 점프패드에서 나올 때
+    public void ExitJumpPad(JumpPad jumpPad)
+    {
+        if (curJumpPad == jumpPad)
+            curJumpPad = null;
+    }
+
+    // 낙하 가속도 조정
     private void FallGravityVelocity()
     {
         float velocityY = _rigidbody.velocity.y;
@@ -118,7 +144,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    // 땅 닿았는지 확인 (Raycast 사용)
     bool IsGrounded()
     {
         Ray[] rays = new Ray[4]
@@ -140,6 +166,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // 인벤토리 열기 (E)
     public void OnInventoryButton(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)
@@ -149,6 +176,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // 커서 잠금 및 해제
     void ToggleCursor()
     {
         bool toggle = Cursor.lockState == CursorLockMode.Locked;

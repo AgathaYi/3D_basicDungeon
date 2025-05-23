@@ -1,10 +1,24 @@
 using UnityEngine;
 
-public class Resource : MonoBehaviour
+public class Resource : MonoBehaviour, IInteractable
 {
+    public InteractionData data;
+
     public ItemData itemToGive;
     public int quantityPerHit = 1;
     public int capacity;
+
+    public string GetInteractPrompt()
+    {
+        string str = $"{data.displayName}\n{data.description}";
+        return str;
+    }
+
+    public void OnInteract()
+    {
+        // 정보만 표시 할 것.
+        // 획득 불가한 기물
+    }
 
     public void Gether(Vector3 hitPoint, Vector3 hitNomal)
     {

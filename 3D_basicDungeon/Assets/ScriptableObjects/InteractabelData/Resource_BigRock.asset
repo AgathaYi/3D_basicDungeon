@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 278f598eee0ee6f4e80cd54240ccf1b3, type: 3}
-  m_Name: JumpPad
+  m_Name: Resource_BigRock
   m_EditorClassIdentifier: 
-  displayName: "\uB300\uC655 \uCFE0\uD0A4 \uC810\uD504\uB300"
-  description: "\uCFE0\uD0A4 \uC704\uC5D0\uC11C \uB192\uC774 \uB6F0\uC5B4\uBCF4\uC790.\n\uB2E4\uB978
-    \uBC29\uC73C\uB85C \uB354 \uBE68\uB9AC \uAC08 \uC218 \uC788\uB2E4.\n\uBC16\uC73C\uB85C
-    \uB5A8\uC5B4\uC9C0\uC9C0 \uC54A\uAC8C \uC870\uC2EC\uD558\uC790."
-  type: 1
+  displayName: "\uBC14\uC704"
+  description: "\uB3C4\uB07C\uB97C \uCC3E\uC544 \uC7A5\uCC29\uD558\uACE0\n\uB3CC\uC744
+    \uCE90\uBCF4\uC790."
+  type: 3

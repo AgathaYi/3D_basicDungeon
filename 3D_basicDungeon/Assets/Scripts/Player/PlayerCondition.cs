@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
 
+// IDamageable 인터페이스 정의
 public interface IDamageable
 {
     public void TakePhysicalDamage(int damage);
 }
-
 
 public class PlayerCondition : MonoBehaviour, IDamageable
 {
@@ -26,6 +26,7 @@ public class PlayerCondition : MonoBehaviour, IDamageable
 
     void Update()
     {
+        // 배고픔 감소와 파워 자동 충전 처리 (Inspector창에서 Rate들 설정으로 감속 가능)
         hunger.Subtract(hunger.passiveValue * hungerDecayRate * Time.deltaTime);
         power.Add(power.passiveValue * powerDecayRate * Time.deltaTime);
 
@@ -40,7 +41,7 @@ public class PlayerCondition : MonoBehaviour, IDamageable
         }
     }
 
-    public void Heal(float amount)
+    public void Caffeine(float amount)
     {
         caffeine.Add(amount);
     }
@@ -48,6 +49,11 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     public void Eat(float amount)
     {
         hunger.Add(amount);
+    }
+
+    public void Drink(float amount)
+    {
+        power.Add(amount);
     }
 
     public void Die()

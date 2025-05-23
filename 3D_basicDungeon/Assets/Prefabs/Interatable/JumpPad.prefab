@@ -136,7 +136,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.097835116, y: 0.033783805, z: 0.108418085}
+  m_Size: {x: 0.097835116, y: 0.06, z: 0.108418085}
   m_Center: {x: 0.00022230149, y: 0.01923333, z: -0.000385952}
 --- !u!114 &7723574307157692034
 MonoBehaviour:
@@ -151,4 +151,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 27dc76bae1ff86b4da1ab622e314eb79, type: 2}
-  jumpForce: 20
+  jumpForce: 50

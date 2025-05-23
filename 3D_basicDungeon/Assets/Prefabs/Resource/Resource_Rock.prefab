@@ -27,9 +27,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3642969361456743750}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.57, y: 0.69, z: 9.69}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4271350779427776863}
@@ -54,8 +54,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1856709, y: 1.2323251, z: 2.119395}
-  m_Center: {x: 0.1440916, y: 0.4905931, z: -0.4078382}
+  m_Size: {x: 8.67, y: 6.57, z: 8.88}
+  m_Center: {x: 0, y: 2.78, z: -2.01}
 --- !u!114 &1251579010551952681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb6918c6195a35f468a6483113403db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: c49c4baf68495e04f9941516ff95388d, type: 2}
   itemToGive: {fileID: 11400000, guid: c9f2413145472f84faf8dae401742ce3, type: 2}
   quantityPerHit: 1
   capacity: 5
@@ -81,11 +82,11 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.55, z: 0.5}
+  m_Extents: {x: 2.75, y: 2.545, z: 0.925}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0.45, z: 0}
+  m_Center: {x: 0, y: 1.92, z: 0}
   m_TimeToStationary: 0.5
 --- !u!1 &5651391627157423015
 GameObject:
@@ -102,7 +103,7 @@ GameObject:
   m_Name: Rock5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
+  m_NavMeshLayer: 2
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4271350779427776863
@@ -115,7 +116,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7379995200836934724}

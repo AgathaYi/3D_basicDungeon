@@ -7,7 +7,7 @@ public enum InteractionType
     Door,
     JumpPad,
     Fire,
-    Water,
+    Resource,
 }
 
 [CreateAssetMenu(fileName = "InteractabelData", menuName = "Item/Interaction Data")]
