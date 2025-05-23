@@ -17,9 +17,9 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     public event Action onTakeDamage;
 
     [Header("Decay Rates")]
-    public float caffeineDecayRate = 0.4f;
-    public float hungerDecayRate = 0.6f;
-    public float powerDecayRate = 0.7f;
+    public float caffeineDecayRate;
+    public float hungerDecayRate;
+    public float powerDecayRate;
 
 
     void Update()
