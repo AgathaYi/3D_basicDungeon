@@ -140,11 +140,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started && IsGrounded())
         {
-            animator.SetTrigger("Jump");
 
             // 점프패드에 닿았다면, JumpPad 클래스의 jumpForce를 사용, 아니면 기본 점프
             float force = (curJumpPad != null) ? curJumpPad.jumpForce : jumpPower;
 
+            animator.SetTrigger("Jump");
             _rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
 
             curJumpPad = null; // 점프패드 해제
@@ -159,7 +159,8 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // 점프패드에 닿았을 때, JumpPad 클래스의 jumpForce를 사용
-        if (collision.collider.TryGetComponent<JumpPad>(out var jumpPad))
+        var jumpPad = collision.collider.GetComponentInParent<JumpPad>();
+        if (jumpPad != null)
         {
             curJumpPad = jumpPad;
         }
@@ -168,11 +169,13 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         // 점프패드에서 떨어졌을 때, JumpPad 클래스의 jumpForce를 사용하지 않음
-        if (collision.collider.TryGetComponent<JumpPad>(out var jumpPad) && curJumpPad == jumpPad)
+        var jumpPad = collision.collider.GetComponentInParent<JumpPad>();
+        if (jumpPad != null && curJumpPad == jumpPad)
         {
             curJumpPad = null;
         }
     }
+
 
     // 낙하 가속도 조정
     private void FallGravityVelocity()
