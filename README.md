@@ -1,4 +1,5 @@
-# 카페인 없이는 못살아!
+# 카페인 없이 못살아 ~!
+
 
 
 ## 📖 개요
@@ -7,19 +8,36 @@
 
 플레이어 이동, 점프, 동적 환경 조사, 점프대, 아이템 획득·인벤토리, 장착, 사용, 간단한 UI와 낮/밤 사이클을 구현했습니다.
 
+![image](https://github.com/user-attachments/assets/7338204a-63d6-41fc-8e73-56bd0c47e045)
+
+
+시점을 변경하는 기능은 구현하지 못했지만, 
+Player오브젝트 > CameraContainer > MainCamera _ FPS와 TPS 시점 위치만 잡아놓았습니다.
+원하는 시점으로 오브젝트 켜고 끄고 하면 됩니다.
+TPS의 경우 미구현 상황이라 장착 아이템에 대해 손위치에 두어야하는 방법이 아닌 상황인 점 양해바랍니다.
+
 ---
 
 ## 🚀 주요 기능
 ### 1. 캐릭터 컨트롤
+![image](https://github.com/user-attachments/assets/4b939e37-718e-4801-bc92-6ddba99ae286)
+
 - **이동(WASD)**, **마우스 시점 조작**(마우스 이동)  
 - **점프(스페이스)**: `Rigidbody` + `ForceMode.Impulse`  
 - **낙하 속도 가속**: 바닥에 닿지 않을 때 중력 계수 적용
 - **인벤토리(E)**: 인벤토리 창 열기
 - **아이템 파밍(F)**: 소지 가능한 아이템을 인벤토리에 저장
 
+---
+
 ### 2. 동적 환경 조사
 - **Raycast**(카메라 중앙)로 바라보는 오브젝트 감지  
 - **상호작용 프롬프트** UI(TextMeshPro)로 이름·설명 표시
+
+- ![image](https://github.com/user-attachments/assets/ddf9dfc1-98e2-489c-b1a7-9899ed38fd04)
+- ![image](https://github.com/user-attachments/assets/fb456ea2-f6a0-410f-9521-4018b669f4c5)
+
+---
 
 ### 3. 점프대
 - **OnCollisionEnter**: 밟으면 순간 임펄스 힘 가하기  
@@ -29,12 +47,17 @@
 ### 4. 아이템 & 인벤토리
 - **ScriptableObject**로 아이템 데이터(이름·설명·아이콘·프리팹·소비 효과·스택 여부) 관리
 - 맵에 배치된 **ItemObject**(IInteractable) 클릭(`F`) 시 획득  
-- **Inventory UI**(`E`):  
+- **Inventory UI**(`E`):
+- ![image](https://github.com/user-attachments/assets/1bc5e80b-27df-4af2-ada8-3ef4242bf280)
   - 4×3 슬롯  
   - 아이템 정보(이름·설명·스탯) 표시  
   - 사용·장착·해제·버리기 버튼  
 - **장착**: 장착용 카메라 상 위치 - 프리팹 인스턴스화 · 카메라 레이어 분리  
 - **소비 효과**: 카페인·배고픔 회복, 파워 효과(시간제)
+- **콜라를 마시면 5초동안 빨라지고 파워가 100%가 됩니다**
+
+---
+
 
 ### 5. UI
 - **체력바(Caffeine), 당충전바(Hunger), 파워바(Power)**(Image Fill 방식)  
@@ -43,9 +66,12 @@
 ### 6. 환경
 - **NavMeshSurface**: 땅·장애물에 대한 베이크  
 - **Day & Night Cycle**: Skybox 머티리얼 블렌드로 낮/밤 전환  
-- **CampFire**: 주기적 애니메이션 및 라이팅  
+- **CampFire**: 주기적 애니메이션 및 라이팅
 
 ---
+
+![image](https://github.com/user-attachments/assets/dc5827f9-a17b-4a04-99da-1ac224b35e94)
+
 
 ## 🧾 사용한 에셋 목록
 
