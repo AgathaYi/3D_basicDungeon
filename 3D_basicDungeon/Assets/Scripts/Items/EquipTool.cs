@@ -23,6 +23,7 @@ public class EquipTool : Equip
         _camera = Camera.main;
     }
 
+    // 공격 입력처리
     public override void OnAttackInput()
     {
         if (!attacking)
@@ -36,11 +37,13 @@ public class EquipTool : Equip
         }
     }
 
+    // 공격 애니메이션이 끝났을 때 호출되는 메서드
     void OnCanAttack()
     {
         attacking = false;
     }
 
+    // 공격 시 적에게 데미지 주기. 애니메이션 이벤트 등록
     public void OnHit()
     {
         Ray ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));

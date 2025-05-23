@@ -191,28 +191,44 @@ public class UIInventory : MonoBehaviour
         dropBtn.SetActive(true);
     }
 
-    // 아이템 사용버튼
+    // 아이템 사용버튼 : try catch문으로 예외처리 도전
     public void OnUseBtn()
     {
-        if (selectedItem.item.type == ItemType.Consumable)
+        try
         {
-            for (int i = 0; i < selectedItem.item.consumables.Length; i++)
+            if (selectedItem.item.type == ItemType.Consumable)
             {
-                switch (selectedItem.item.consumables[i].type)
+                for (int i = 0; i < selectedItem.item.consumables.Length; i++)
                 {
-                    case ConsumableType.Caffeine:
-                        condition.Caffeine(selectedItem.item.consumables[i].value);
-                        break;
-                    case ConsumableType.Hunger:
-                        condition.Eat(selectedItem.item.consumables[i].value);
-                        break;
-                    case ConsumableType.Power:
-                        controller.PowerBooster(); // 파워부스터 사용- Coroutine
-                        break;
+                    switch (selectedItem.item.consumables[i].type)
+                    {
+                        case ConsumableType.Caffeine:
+                            condition.Caffeine(selectedItem.item.consumables[i].value);
+                            break;
+                        case ConsumableType.Hunger:
+                            condition.Eat(selectedItem.item.consumables[i].value);
+                            break;
+                        case ConsumableType.Power:
+                            controller.PowerBooster(); // 파워부스터 사용- Coroutine
+                            break;
+                    }
+                }
+
+                try
+                {
+                    RemoveSelectedItem();
+                }
+                catch (System.Exception exception)
+                {
+                    Debug.LogError("인벤토리 스크립트 RemoveSelectedItem 실패");
+                    Debug.LogException(exception);
                 }
             }
-
-            RemoveSelectedItem();
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogError("인벤토리 스크립트 OnUseBtn 실패");
+            Debug.LogException(exception);
         }
     }
 

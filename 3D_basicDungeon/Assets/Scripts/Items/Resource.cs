@@ -20,6 +20,7 @@ public class Resource : MonoBehaviour, IInteractable
         // 획득 불가한 기물
     }
 
+    // 채집시 드랍되는 아이템 생성
     public void Gether(Vector3 hitPoint, Vector3 hitNomal)
     {
         for (int i = 0; i < quantityPerHit; i++)

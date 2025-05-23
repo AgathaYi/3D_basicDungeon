@@ -21,7 +21,7 @@ public class JumpPad : MonoBehaviour, IInteractable
         // 획득 불가한 기물
     }
 
-    // 점프패드 collisionEnter시 플레이어 컨트롤러에서 설정
+    // 점프패드 collisionEnter시 플레이어 점프를 JumpPad의 힘으로 점프
     private void OnCollisionEnter(Collision collision)
     {
         Rigidbody rigidbody = collision.gameObject.GetComponent<Rigidbody>();

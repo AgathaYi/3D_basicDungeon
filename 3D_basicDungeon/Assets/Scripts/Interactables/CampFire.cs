@@ -27,6 +27,7 @@ public class CampFire : MonoBehaviour, IInteractable
         // 획득 불가한 기물
     }
 
+    // 주기적으로 데미지 주기
     void DealDamage()
     {
         for (int i = 0; i < things.Count; i++)
@@ -35,6 +36,7 @@ public class CampFire : MonoBehaviour, IInteractable
         }
     }
 
+    // Trigger에 들어온 물체가 IDamageable을 구현하고 있는지 확인
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out IDamageable damageable))
@@ -43,6 +45,7 @@ public class CampFire : MonoBehaviour, IInteractable
         }
     }
 
+    // Trigger에서 나간 물체가 IDamageable을 구현하고 있는지 확인
     private void OnTriggerExit(Collider other)
     {
         if (other.TryGetComponent(out IDamageable damageable))
