@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4317123132621809462}
   - component: {fileID: 1746865559846876058}
   - component: {fileID: 6490781964864949613}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CookieJump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 2223605016150768922}
   - component: {fileID: 59499465336748620}
   - component: {fileID: 7723574307157692034}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: JumpPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,4 +150,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5df2e223959fb441809457eb02dfb7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 27dc76bae1ff86b4da1ab622e314eb79, type: 2}
   jumpForce: 20

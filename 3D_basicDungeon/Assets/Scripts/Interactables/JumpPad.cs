@@ -2,9 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpPad : MonoBehaviour
+public class JumpPad : MonoBehaviour, IInteractable
 {
-    public float jumpForce; // Á¡ÇÁ Èû
+    public InteractionData data; // »óÈ£ÀÛ¿ë µ¥ÀÌÅÍ
+
+    public float jumpForce = 20f; // Á¡ÇÁ Èû
+    public string GetInteractPrompt()
+    {
+        string str = $"{data.displayName}\n{data.description}";
+        return str;
+    }
+
+    public void OnInteract()
+    {
+        // Á¤º¸¸¸ Ç¥½Ã ÇÒ °Í.
+        // È¹µæ ºÒ°¡ÇÑ ±â¹°
+    }
 
     private void OnCollisionEnter(Collision collision)
     {

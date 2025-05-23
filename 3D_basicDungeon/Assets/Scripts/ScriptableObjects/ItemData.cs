@@ -25,10 +25,8 @@ public class ItemDataConsumable
     public float value;
 }
 
-[CreateAssetMenu(fileName = "ItemDatas", menuName = "New Item")]
-
-// SciriptableObject 상속
-public class ItemData : ScriptableObject
+[CreateAssetMenu(fileName = "ItemData", menuName = "Item/New Data")]
+public class ItemData : ScriptableObject // SciriptableObject 상속
 {
     [Header("Info")]
     public string displayName;
@@ -46,5 +44,7 @@ public class ItemData : ScriptableObject
 
     [Header("Equip")]
     public GameObject equipPrefab;
-
 }
+
+
+

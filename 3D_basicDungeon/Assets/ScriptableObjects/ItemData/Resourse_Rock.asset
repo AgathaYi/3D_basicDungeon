@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Resourse_Rock
   m_EditorClassIdentifier: 
   displayName: "\uB3CC"
-  description: "\uBC29\uD574\uB418\uB2C8 \uCE58\uC6CC\uC57C\uACA0\uB2E4. \uB098\uC911\uC5D0
-    \uC4F8 \uB370\uAC00 \uC788\uC744\uAE4C?"
+  description: "\uADF8\uB0E5 \uB3CC\uC774\uB2E4."
   type: 2
   icon: {fileID: 21300000, guid: cd7d756f44d77e5408f309e31b338802, type: 3}
   dropPrefab: {fileID: 4412574713292222925, guid: 2d01eea0a628c674ba401e2582fc4577, type: 3}
