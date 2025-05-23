@@ -19,8 +19,8 @@ public class EquipTool : Equip
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         _camera = Camera.main;
-        animator = GetComponentInChildren<Animator>();
     }
 
     public override void OnAttackInput()
@@ -48,10 +48,9 @@ public class EquipTool : Equip
 
         if (Physics.Raycast(ray, out hit, attackDistance))
         {
+            // 府家胶 盲笼 贸府
             if (doesGatherResource && hit.collider.TryGetComponent(out Resource resource))
-            {
                 resource.Gether(hit.point, hit.normal);
-            }
         }
     }
 }

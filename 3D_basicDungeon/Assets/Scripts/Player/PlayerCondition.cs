@@ -14,13 +14,18 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     Condition power { get { return uiCondition.power; } }
 
     public float noHungerHealthDecay;
-
     public event Action onTakeDamage;
+
+    [Header("Decay Rates")]
+    public float caffeineDecayRate = 0.4f;
+    public float hungerDecayRate = 0.6f;
+    public float powerDecayRate = 0.7f;
+
 
     void Update()
     {
-        hunger.Subtract(hunger.passiveValue * Time.deltaTime);
-        power.Add(power.passiveValue * Time.deltaTime);
+        hunger.Subtract(hunger.passiveValue * hungerDecayRate * Time.deltaTime);
+        power.Add(power.passiveValue * powerDecayRate * Time.deltaTime);
 
         if (hunger.curValue == 0f)
         {

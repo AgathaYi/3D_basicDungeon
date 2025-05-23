@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed;
     public float jumpPower;
+    public float fallGravity = 20f;
     private Vector2 curMovementInput;
     public LayerMask groundLayerMask;
 
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public float lookSensitivity;
     private Vector2 mouseDelta;
 
+    public Animator animator;
+
     public bool canLook = true;
     public Action inventory;
 
@@ -26,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -36,6 +40,10 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Move();
+
+        // 낙하 가속도 조정
+        FallGravityVelocity();
+        animator.SetBool("IsGround", IsGrounded());
     }
 
     private void LateUpdate()
@@ -53,6 +61,10 @@ public class PlayerController : MonoBehaviour
         dir.y = _rigidbody.velocity.y;
 
         _rigidbody.velocity = dir;
+
+        // 애니메이션 추가
+        float speed = new Vector2(_rigidbody.velocity.x, _rigidbody.velocity.z).magnitude;
+        animator.SetFloat("Speed", speed);
     }
 
     void CameraLook()
@@ -85,15 +97,27 @@ public class PlayerController : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started && IsGrounded())
         {
+            animator.SetTrigger("Jump");
             _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
         }
-        // 더블점프 구현, 트리플점프 불가
         else if (context.phase == InputActionPhase.Started && !IsGrounded())
         {
             // 점프를 하지 않음
             return;
         }
     }
+
+    private void FallGravityVelocity()
+    {
+        float velocityY = _rigidbody.velocity.y;
+
+        if (velocityY < 0f)
+        {
+            Vector3 fall = Vector3.up * Physics.gravity.y * (fallGravity - 1);
+            _rigidbody.AddForce(fall, ForceMode.Acceleration);
+        }
+    }
+
 
     bool IsGrounded()
     {
