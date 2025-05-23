@@ -41,16 +41,19 @@ public class PlayerCondition : MonoBehaviour, IDamageable
         }
     }
 
+    // 체력역할 = caffeine
     public void Caffeine(float amount)
     {
         caffeine.Add(amount);
     }
 
+    // 배고픔 = hunger
     public void Eat(float amount)
     {
         hunger.Add(amount);
     }
 
+    // 파워 = power
     public void Drink(float amount)
     {
         power.Add(amount);
@@ -61,12 +64,14 @@ public class PlayerCondition : MonoBehaviour, IDamageable
         Debug.Log("Player has died.");
     }
 
+    // 체력(카페인) 감소
     public void TakePhysicalDamage(int damage)
     {
         caffeine.Subtract(damage);
         onTakeDamage?.Invoke();
     }
 
+    // 파워사용 (장비 공격 및 채집 사용 시, 감소)
     public bool UsePower(float amount)
     {
         if (power.curValue - amount < 0f)

@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class SkyboxDayNight : MonoBehaviour
 {
-    public Material sunriseMaterial; // SkyhighFluffycloudField4k.mat
-    public Material sunsetMaterial; // CloudedSunGlow4k.mat
+    public Material sunriseMaterial; // Trinita~
+    public Material sunsetMaterial; // Kirby~
     [Range(0, 1)] public float blend; // 0: sunrise, 1: sunset(해 짐)
 
     public float time;
@@ -31,7 +31,7 @@ public class SkyboxDayNight : MonoBehaviour
 
     void Start()
     {
-        // 처음 skybox는 SkyhighFluffycloudField4k 으로 설정
+        // 처음 skybox는 Trinita~ 으로 설정
         RenderSettings.skybox = Instantiate(sunriseMaterial);
 
         timeRate = 1.0f / fullDayLength;
@@ -67,6 +67,7 @@ public class SkyboxDayNight : MonoBehaviour
         lightSource.color = colorGradient.Evaluate(time);
         lightSource.intensity = intensity;
 
+        // light의 intensity에 따라 lightSource의 활성화 여부 결정
         GameObject go = lightSource.gameObject;
         if (lightSource.intensity == 0 && go.activeInHierarchy)
         {
