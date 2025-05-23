@@ -52,6 +52,7 @@ public class UIInventory : MonoBehaviour
 
     }
 
+    // 아이템 초기화
     void ClearSelectedItemWindow()
     {
         selectedItem = null;
@@ -67,6 +68,7 @@ public class UIInventory : MonoBehaviour
         dropBtn.SetActive(false);
     }
 
+    // 인벤토리 열기/닫기 토글
     public void Toggle()
     {
         if (IsOpen())
@@ -79,11 +81,13 @@ public class UIInventory : MonoBehaviour
         }
     }
 
+    // 인벤토리 열기
     public bool IsOpen()
     {
         return inventoryWindow.activeInHierarchy;
     }
 
+    // 아이템 추가
     public void AddItem()
     {
         ItemData data = CharacterManager.Instance.Player.itemData;
@@ -113,6 +117,7 @@ public class UIInventory : MonoBehaviour
         CharacterManager.Instance.Player.itemData = null;
     }
 
+    // UI 업데이트
     public void UpdateUI()
     {
         for (int i = 0; i < slots.Length; i++)
@@ -128,6 +133,7 @@ public class UIInventory : MonoBehaviour
         }
     }
 
+    // 아이템 스택 찾기
     ItemSlot GetItemStack(ItemData data)
     {
         for (int i = 0; i < slots.Length; i++)
@@ -140,6 +146,7 @@ public class UIInventory : MonoBehaviour
         return null;
     }
 
+    // 빈 슬롯 찾기
     ItemSlot GetEmptySlot()
     {
         for (int i = 0; i < slots.Length; i++)
@@ -152,11 +159,13 @@ public class UIInventory : MonoBehaviour
         return null;
     }
 
+    // 아이템 드랍
     public void ThrowItem(ItemData data)
     {
         Instantiate(data.dropPrefab, dropPosition.position, Quaternion.Euler(Vector3.one * Random.value * 360));
     }
 
+    // 아이템 선택
     public void SelectItem(int index)
     {
         if (slots[index].item == null) return;
@@ -182,6 +191,7 @@ public class UIInventory : MonoBehaviour
         dropBtn.SetActive(true);
     }
 
+    // 아이템 사용버튼
     public void OnUseBtn()
     {
         if (selectedItem.item.type == ItemType.Consumable)
@@ -197,7 +207,7 @@ public class UIInventory : MonoBehaviour
                         condition.Eat(selectedItem.item.consumables[i].value);
                         break;
                     case ConsumableType.Power:
-                        condition.Drink(selectedItem.item.consumables[i].value);
+                        controller.PowerBooster(); // 파워부스터 사용- Coroutine
                         break;
                 }
             }
@@ -206,6 +216,7 @@ public class UIInventory : MonoBehaviour
         }
     }
 
+    // 아이템 버리기버튼
     public void OnDropBtn()
     {
         ThrowItem(selectedItem.item);
@@ -230,6 +241,7 @@ public class UIInventory : MonoBehaviour
         UpdateUI();
     }
 
+    // 장비 아이템 장착버튼
     public void OnEquipBtn()
     {
         if (slots[curEquipIndex].equipped)
@@ -245,6 +257,12 @@ public class UIInventory : MonoBehaviour
         SelectItem(selectedItemIndex);
     }
 
+    // 장비 아이템 해제버튼
+    public void OnUnEquipBtn()
+    {
+        UnEquip(selectedItemIndex);
+    }
+
     void UnEquip(int index)
     {
         slots[index].equipped = false;
@@ -257,11 +275,7 @@ public class UIInventory : MonoBehaviour
         }
     }
 
-    public void OnUnEquipBtn()
-    {
-        UnEquip(selectedItemIndex);
-    }
-
+    // 아이템이 있는지 확인
     public bool HasItem(ItemData item, int quantity)
     {
         return false;

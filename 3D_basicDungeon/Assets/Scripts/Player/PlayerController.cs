@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +12,11 @@ public class PlayerController : MonoBehaviour
     public float fallGravity = 20f;
     private Vector2 curMovementInput;
     public LayerMask groundLayerMask;
+
+    [Header("Boost")] //corutine 사용
+    public float boostDuration = 5f; //부스트 지속시간
+    public float boostSpeed = 3f; //배수
+    public Image powerBarImage;
 
     [Header("Look")]
     public Transform cameraContainer;
@@ -69,7 +76,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("Speed", speed);
     }
 
-    // 마우스 커서 방향으로 회전 (mnouseDelta)
+    // 카메라 시점 회전
     void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
@@ -92,10 +99,40 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // 마우스 이동
+    // 마우스 델타 회전
     public void OnLook(InputAction.CallbackContext context)
     {
         mouseDelta = context.ReadValue<Vector2>();
+    }
+
+    // Power 관련 아이템 Drink() 사용시 부스트 효과
+    public void PowerBooster()
+    {
+        // PowerBar 100% 채우기
+        CharacterManager.Instance.Player.condition.
+            Drink(CharacterManager.Instance.Player.condition.uiCondition.power.maxValue);
+
+        // Couroutine으로 부스트 효과 적용
+        StartCoroutine(PowerBoostCoroutine());
+    }
+
+    private IEnumerator PowerBoostCoroutine()
+    {
+        // 원래 속도, 색상 저장
+        float originalSpeed = moveSpeed;
+        var originalColor = powerBarImage.color;
+
+        // 부스트 속도 적용
+        moveSpeed *= boostSpeed;
+        powerBarImage.color = new Color(0.6f, 0, 1, 1); // 보라빛으로 강조
+        powerBarImage.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f); // 스케일 강조
+
+        // 지속시간동안 대기
+        yield return new WaitForSeconds(boostDuration);
+
+        // 원래 값으로 복원
+        moveSpeed = originalSpeed;
+        powerBarImage.color = originalColor; // 원래 색상으로 복원
     }
 
     // Spacebar 점프
@@ -105,7 +142,7 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetTrigger("Jump");
 
-            // 점프패드가 있다면, JumpPad 클래스의 jumpForce를 사용, 아니면 기본 점프
+            // 점프패드에 닿았다면, JumpPad 클래스의 jumpForce를 사용, 아니면 기본 점프
             float force = (curJumpPad != null) ? curJumpPad.jumpForce : jumpPower;
 
             _rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
@@ -119,17 +156,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // 점프패드에서 점프
-    public void EnterJumpPad(JumpPad jumpPad)
+    private void OnCollisionEnter(Collision collision)
     {
-        curJumpPad = jumpPad;
+        // 점프패드에 닿았을 때, JumpPad 클래스의 jumpForce를 사용
+        if (collision.collider.TryGetComponent<JumpPad>(out var jumpPad))
+        {
+            curJumpPad = jumpPad;
+        }
     }
 
-    // 점프패드에서 나올 때
-    public void ExitJumpPad(JumpPad jumpPad)
+    private void OnCollisionExit(Collision collision)
     {
-        if (curJumpPad == jumpPad)
+        // 점프패드에서 떨어졌을 때, JumpPad 클래스의 jumpForce를 사용하지 않음
+        if (collision.collider.TryGetComponent<JumpPad>(out var jumpPad) && curJumpPad == jumpPad)
+        {
             curJumpPad = null;
+        }
     }
 
     // 낙하 가속도 조정

@@ -6,7 +6,7 @@ public class JumpPad : MonoBehaviour, IInteractable
 {
     public InteractionData data; // 상호작용 데이터
 
-    public float jumpForce = 15f; // 점프 힘
+    public float jumpForce; // 점프 힘
 
     // 상호작용시 표시할 정보
     public string GetInteractPrompt()
@@ -21,21 +21,14 @@ public class JumpPad : MonoBehaviour, IInteractable
         // 획득 불가한 기물
     }
 
-    // 점프패드 진입시 - 플레이어 컨트롤러에서 설정
-    private void OnTriggerEnter(Collider other)
+    // 점프패드 collisionEnter시 플레이어 컨트롤러에서 설정
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Player"))
-        {
-            other.GetComponent<PlayerController>()?.EnterJumpPad(this);
-        }
-    }
+        Rigidbody rigidbody = collision.gameObject.GetComponent<Rigidbody>();
 
-    // 점프패드 이탈시 - 플레이어 컨트롤러에서 설정
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<PlayerController>()?.ExitJumpPad(this);
+            collision.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 }
